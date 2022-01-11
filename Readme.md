@@ -283,7 +283,7 @@ As mentioned in the motivation I wanted to have linux as the main development en
 
 To configure Docker and Docker compose, I followed the [this article](https://dev.to/felipecrs/simply-run-docker-on-wsl2-3o8) from [Felipe Santos](https://dev.to/felipecrs).
 
-NOTE: Below steps are based on image created above. For my case I followed below steps to keep these as 2 seprate images
+NOTE: Below steps are based on image created above. For my case, I followed below steps to keep these as 2 seprate images
 
 ```cmd
 wsl --export debian11 ./wsl_backups/deb11base.tar
@@ -295,6 +295,8 @@ wsl -d deb11docker
 Note: Exported image size is now about 1GB.
 
 Now I am logged in the new WSL distro for further configuration
+
+### Setup Docker inside WSL2
 
 1. Install Docker CE for Debian [following official documentation](https://docs.docker.com/engine/install/debian/)
 
@@ -368,8 +370,92 @@ Now I am logged in the new WSL distro for further configuration
    
    docker run hello-world
    ```
-  
-8. Export the image as next base image for Remote Container development. Shutdown the WSL distro first
+
+### Setup Docker Compose (V2) inside WSL2
+
+This part was bit tricky for to understand. It turns out that with  [Docker compose V2](https://github.com/docker/compose/tree/v2#linux) implementation was drastically changed and not just the implementation language from Python to golang. 
+
+Due to this to keep all 3rd party application integrations, what still used old commands, working an intermediary application was developed called [compose-switch](https://github.com/docker/compose-switch). It basically translate old commands to new commands. Overall installation steps are as follow.
+
+1. Install Docker Compose v2 at system level. There is an option to install at user level as well. One just need to change the location of the file `~/.docker/cli-plugins/docker-compose` for it.
+
+   ```zsh
+   # Finds the latest version
+   $ compose_version=$(curl -fsSL -o /dev/null -w "%{url_effective}" https://github.com/docker/compose/releases/latest | xargs basename)
+
+   # Downloads the binary to the plugins folder
+   $ sudo curl -fL --create-dirs -o /usr/libexec/docker/cli-plugins/docker-compose \
+      "https://github.com/docker/compose/releases/download/${compose_version}/docker-compose-linux-$(uname -m)"
+
+   # Assigns execution permission to it
+   $ chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+   ```
+
+2. Test if Docker compose V2 is working
+
+   ```zsh
+   docker compose version
+   ```
+
+3. Install compose-switch. This based on the article linked in the beginning for VS Code. I assume VS Code still use docker-compose commands somewhere. This was bit tricky as I found small differences in [official documentation](https://github.com/docker/compose-switch) and the [article I followed](https://dev.to/felipecrs/simply-run-docker-on-wsl2-3o8). Official documentation has an install script, but it could not setup the alternatives due to permissions. I followed below manual steps to get it installed.
+
+   1. Use installation script from the installation script to install latest compose-switch.
+
+   2. Set alternative for docker-compose to point it to compose-switch. This internally with then translate old version commands to new version.
+
+      ```zsh
+      sudo update-alternatives --install /usr/local/bin/docker-compose docker-compose /usr/local/bin/compose-switch 99
+      ```
+
+   3. Test docker-compose and docker compose are same
+
+      ```zsh
+      docker compose version
+      docker-compose version
+      ```
+
+   4. Install Docker credential helper. This is needed to store docker credential if using `docker login`. 
+
+      ```zsh
+         # Finds the latest version
+         $ wincred_version=$(curl -fsSL -o /dev/null -w "%{url_effective}" https://github.com/docker/docker-credential-helpers/releases/latest | xargs basename)
+
+         # Downloads and extracts the .exe
+         $ sudo curl -fL \
+            "https://github.com/docker/docker-credential-helpers/releases/download/${wincred_version}/docker-credential-wincred-${wincred_version}-$(dpkg --print-architecture).zip" |
+            zcat | sudo tee /usr/local/bin/docker-credential-wincred.exe >/dev/null
+
+         # Assigns execution permission to it
+         $ sudo chmod +x /usr/local/bin/docker-credential-wincred.exe
+      ```
+
+   5. Configure docker so that docker cli can use it. Edit ~/.docker/config.json to add below entries. This will help share Docker crendtials among different WSL distros using Windows Credential manager
+
+      ```json
+      {
+         "credsStore": "wincred.exe"
+      }
+      ```
+
+   6. Test Crdential helper setting by logging into to docker. If there is no complain about plain text password then it has worked. Or if it already used credentials from Windows.
+
+      ```zsh
+      docker login
+      ```
+
+   7. Enable [BuildKit feature](https://docs.docker.com/develop/develop-images/build_enhancements/). Add below lines in `/etc/docker/daemon.json`
+
+      ```json
+      {
+         "features": {
+            "buildKit": true
+         }
+      }
+      ```
+
+### Export the image
+
+ As next base image for Remote Container development. Shutdown the WSL distro first
   
   ```powershell
    
@@ -378,4 +464,10 @@ Now I am logged in the new WSL distro for further configuration
 
 NOTE: Image size is now about 1.5GB
 
+### Test Docker development container using VS Code
 
+WSL Debian environment is setup with 
+
+- Git, Docker CE and Docker Compose V2 in WSL
+  
+- Git Credential Manager (GCM) and Visual Studio Code with Remote Extension pack in Windows.
