@@ -107,6 +107,13 @@ To move it to another location follow below steps. My choice below is D drive. R
 NOTE: In case you want to keep the name of the distribution as original e.g. Debian then you need to execute step 7 before step 5.
 
 8. Create new entry for the system (debian11) in Windows Terminal. This is quite easy. Simply exit Windows Terminal and start it again. You should have default entry created for it.
+9. Set default user for the new distro. This is to avoid logging in as root user. Add/update [user] section in /etc/wsl.conf
+    ```
+    [user]
+    default = defaultusername
+    ```
+
+For detailed configuration parameters for WSL (global and per distribution) please check [Microsoft's official documentation](https://docs.microsoft.com/en-us/windows/wsl/wsl-config).
 
 ## Configure Windows Terminal to start Debian with default user and directory
 By default WSL distros open with root user and in the directory from which you execute wsl or default user directory. There are different ways, but I prefered to configure Windows Terminal entry to configure the entry. Open Windows Terminal Settings and on the left side select your distribution. Set below options in **Tab General > commandline**
@@ -159,12 +166,33 @@ This section is based on [these nicely documentated articles](https://www.ceos3c
 
       # For Azure DevOps support only
       git config --global credential.https://dev.azure.com.useHttpPath true
-````
- 1. In windows set envoronment variable WSLENV. From and Administrator cmd promot execute
+   ```
+ 3. In windows set envoronment variable WSLENV. From and Administrator cmd prompt execute
  ```
     SETX WSLENV %WSLENV%:GIT_EXEC_PATH/wp
  ```
  4. Restart WSL and Windows 
 
+## Oh My Posh in action
+I skipped earlier on what happens when Oh My Posh is installed. You might have read the documentation earlier to know what it is about. Here I am capturing some results for the sake of completeness on my setup.
+1. Default shell with OMP: A nice look with execution duration
+   ![simple Oh My Posh in action](images/omp.drawio.svg)
+   
+2. With Git extension installed and repository fully synched
+   ![Git repo fuly synched](images/omp_git_synch.drawio.svg)
+3. With Repository not fully synched. 2 additions, 1 update and 1 deletion.
+   ![Git repo with unsync changes](images/omp_git_notsynch.drawio.svg)
 
-  
+##   Remote WSL development using Visual Studio code
+1. [Install Visual Studio Code](https://code.visualstudio.com/download) in Windows. 
+2. [Install Remote Development Extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). If you are not going to use docker or other remote SSH server then you can only install Remote WSL extension.
+3. Open your project folder in WSL distro in VS Code. On your WSL shell in the appropriate folder execute 
+   ```
+   code .
+   ```
+4. Alternatively one can also use Remote WSL extension commands from VS code command palette open a certain folder for development.
+5. When VS Code is started for the first time in WSL distro it will installe VS Code server in WSL distro to allow connections from VS Code client from Windows.
+6. Install extensions inside VS code remote. This is needed based on the extension. e.g. if you use python then Python extension needs to be installed on each WSL distibution. Some extensions are only required to be installed on Windows. VS Code prompts and give option to WSL install for applicable extensions.
+   
+   **NOTE**: When you open terminal window in Remote WSL session. VS Code opens terminal with default user configured for that WSL distro, which is usually root user. You can either switch to your desired user in terminal for commands or set the default user to the required one before opening VS Code Remote WSL session. [Currently there is no option to select/configure a user per session/workspace./project.](https://github.com/microsoft/vscode-remote-release/issues/286) 
+ 
