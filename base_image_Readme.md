@@ -79,7 +79,7 @@ To move it to another location follow below steps. My choice below is D drive. R
 
 2. Create a directory to store your wsl exports/backups
   
-   ```cmd 
+   ```cmd
    mkdir wsl_backups
    ```
 
@@ -182,18 +182,18 @@ This section is based on [these nicely documentated articles](https://www.ceos3c
  1. Install [GCM on Windows from the source](https://github.com/GitCredentialManager/git-credential-manager/releases/)
  2. Configure git config in WSL
 
-   ```bash
-   git config --global credential.helper "/mnt/c/Program\ Files\ \(x86\)/Git\ Credential\ Manager/git-credential-manager-core.exe"
+    ```bash
+    git config --global credential.helper "/mnt/c/Program\ Files\ \(x86\)/Git\ Credential\ Manager/git-credential-manager-core.exe"
 
-   # For Azure DevOps support only
-   git config --global credential.https://dev.azure.com.useHttpPath true
-   ```
+    # For Azure DevOps support only
+    git config --global credential.https://dev.azure.com.useHttpPath true
+    ```
 
-3. In windows set envoronment variable WSLENV. From and Administrator cmd prompt execute
+ 3. In windows set envoronment variable WSLENV. From and Administrator cmd prompt execute
 
- ```cmd
+    ```cmd
     SETX WSLENV %WSLENV%:GIT_EXEC_PATH/wp
- ```
+    ```
 
  4. Restart WSL and Windows
 
@@ -233,4 +233,5 @@ Export the WSL Debian image. Other images can then be build on top of this image
 wsl --export debian11 ./wsl_backups/deb11base.tar
 
 ```
+
 Note: Exported image size is now about 1GB.
