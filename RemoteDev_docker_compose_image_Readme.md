@@ -1,10 +1,8 @@
 # Remote Docker development on WSL using Visual Studio Code
 
-
 Make sure to read the [main Readme documentation](Readme.md) and that you have all pre-requisites installed.
 
 NOTE: Below steps are done using [Base development image](base_image_Readme.md). If you are using just vanilla Debian OS, then make sure to follow the steps in the Base image development, otherwise below steps won't achieve the desired result.
-
 
 As mentioned in the motivation I wanted to have linux as the main development environment, so I decided not to install Docker Desktop on Windows, rather inside WSL. Microsoft has [official documentation](https://code.visualstudio.com/docs/remote/containers) with all the requirements and options available.
 
@@ -97,7 +95,7 @@ Now I am logged in the new WSL distro for further configuration
 
 ## Setup Docker Compose (V2) inside WSL2
 
-This part was bit tricky for to understand. It turns out that with  [Docker compose V2](https://github.com/docker/compose/tree/v2#linux) implementation was drastically changed and not just the implementation language from Python to golang. 
+This part was bit tricky for to understand. It turns out that with  [Docker compose V2](https://github.com/docker/compose/tree/v2#linux) implementation was drastically changed and not just the implementation language from Python to golang.
 
 Due to this to keep all 3rd party application integrations, what still used old commands, working an intermediary application was developed called [compose-switch](https://github.com/docker/compose-switch). It basically translate old commands to new commands. Overall installation steps are as follow.
 
@@ -138,7 +136,7 @@ Due to this to keep all 3rd party application integrations, what still used old 
       docker-compose version
       ```
 
-   4. Install Docker credential helper. This is needed to store docker credential if using `docker login`. 
+   4. Install Docker credential helper. This is needed to store docker credential if using `docker login`.
 
       ```zsh
          # Finds the latest version

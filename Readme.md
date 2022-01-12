@@ -60,5 +60,3 @@ Below images are created during this process. I hope to add to the list as I kee
 * ## [Base Debian development image with VS Code](base_image_Readme.md)
 
 * ## [Remote Development WSL image based on Docker and Docker Compose V2](RemoteDev_docker_compose_image_Readme.md)
-
-
