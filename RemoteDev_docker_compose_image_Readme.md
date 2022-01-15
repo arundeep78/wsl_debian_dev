@@ -175,6 +175,10 @@ Due to this to keep all 3rd party application integrations, what still used old 
       }
       ```
 
+## Install VS Code extension
+
+Install [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) in VS Code. Make sure it is installed inside WSL.
+
 ## Export the image
 
  As next base image for Remote Container development. Shutdown the WSL distro first

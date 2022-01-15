@@ -22,6 +22,8 @@ Above is the main development Debian(11) image. Idea is to keep it as an exporte
    1. [MiniKube](https://minikube.sigs.k8s.io/docs/tutorials/multi_node/)
    2. [Kind](https://kind.sigs.k8s.io/docs/user/quick-start/) needs docker as well
    3. [Mikrok8s](https://microk8s.io/?ref=thechiefio) needs snap tool on Linux
+   4. [K3s](https://rancher.com/docs/k3s/latest/en/)
+   5. [RKE](https://rancher.com/docs/rke/latest/en/)
 3. Apache Airflow image. Any one which works. [Official documentation](https://airflow.apache.org/docs/apache-airflow/stable/installation/index.html#using-managed-airflow-services) provides atleast 4 ways to install Airflow. In addition there are solutions from 3rd party and cloud service providers. I hope to get [Kubernetes option using Kind](https://airflow.apache.org/docs/helm-chart/stable/index.html#) working using Helm Chart. This will also help me (I hope) to learn Docker, Kubernetes on the way.
 
 This repository is simply documentation of what I did to setup my WSL2 development environment using Debian and VS Code.
@@ -57,6 +59,16 @@ By default Ubuntu will be installed.
 
 Below images are created during this process. I hope to add to the list as I keep working on it. Please clik the link to read details on the images.
 
+NOTE: AS I worked on these images, I found I could compress these exported tar files. Compression would reduce the file size by 1/3! Example command is
+
+ ```powershell
+   wsl --export deb11 .\wsl_backup\deb11.tar | tar -czf .\wsl_backup\deb11.tar.gz .\wsl_backup\deb11.tar
+   
+   rm .\wsl_backup\deb11.tar
+   ```
+
 * ## [Base Debian development image with VS Code](base_image_Readme.md)
 
 * ## [Remote Development WSL image based on Docker and Docker Compose V2](RemoteDev_docker_compose_image_Readme.md)
+
+* ## [Kubernetes image based on Kind](Kind_k8s_Readme.md)

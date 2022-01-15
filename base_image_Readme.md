@@ -162,6 +162,13 @@ This section is based on [these nicely documentated articles](https://www.ceos3c
 6. Customize Oh My Posh themes to your liking.
    There are variety of [themes available for Oh My Posh](https://ohmyposh.dev/docs/themes). You can also combine options from different themes by changing theme's json file. You can read about configuration possibilities on the [website](https://ohmyposh.dev/docs/config-overview).
 
+7. Install zsh auto-suggestions
+
+   ```zsh
+   sudo apt update
+   sudo apt install zsh-autosuggestions -y 
+   ```
+
 ## Git Setup
 
   Microsoft has [official documentation](https://docs.microsoft.com/en-us/windows/wsl/tutorials/wsl-git) on Git setup on WSL. Please read that for up-to-date information and further details.
