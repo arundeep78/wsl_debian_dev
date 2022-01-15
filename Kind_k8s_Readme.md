@@ -56,13 +56,17 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 ```
 
-## Configure kubectl autocompletion
+## Configure autocompletion
 
-In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind for zsh.
+In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for zsh.
 
 ```zsh
 kind completion zsh > _kind
 sudo mv _kind > /usr/local/share/zsh/site-plugins/_kind
+
+kubectl completion zsh > _kubectl
+sudo mv _kubectl > /usr/local/share/zsh/site-plugins/_kubectl
+
 ```
 
 ## Install Helm
@@ -204,5 +208,4 @@ If we update kind then we might have to update node image version as well.
 
    However, I don't know how to improve this command to avoid repeating filenames.
 
-NOTE: Compresses image file is now about 1.2 GB from original export of about 3GB
-
+NOTE: Compresses image file is now about 700 MB.

@@ -110,7 +110,7 @@ Due to this to keep all 3rd party application integrations, what still used old 
       "https://github.com/docker/compose/releases/download/${compose_version}/docker-compose-linux-$(uname -m)"
 
    # Assigns execution permission to it
-   $ chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+   $ sudo chmod +x /usr/libexec/docker/cli-plugins/docker-compose
    ```
 
 2. Test if Docker compose V2 is working
@@ -122,6 +122,15 @@ Due to this to keep all 3rd party application integrations, what still used old 
 3. Install compose-switch. This based on the article linked in the beginning for VS Code. I assume VS Code still use docker-compose commands somewhere. This was bit tricky as I found small differences in [official documentation](https://github.com/docker/compose-switch) and the [article I followed](https://dev.to/felipecrs/simply-run-docker-on-wsl2-3o8). Official documentation has an install script, but it could not setup the alternatives due to permissions. I followed below manual steps to get it installed.
 
    1. Use installation script from the installation script to install latest compose-switch.
+
+      ```zsh
+      curl -fLO https://raw.githubusercontent.com/docker/compose-switch/master/install_on_linux.sh
+
+      chmod +x install_on_linux.sh
+      sudo ./install_on_linux.sh
+      ```
+
+   It copied compose-switch to the required path but failed to set alternatives.
 
    2. Set alternative for docker-compose to point it to compose-switch. This internally with then translate old version commands to new version.
 
@@ -185,10 +194,12 @@ Install [Docker extension](https://marketplace.visualstudio.com/items?itemName=m
   
   ```powershell
    
-   wsl --export deb11docker ./wsl_backups/deb11_docker.tar
+   wsl --export deb11docker ./wsl_backups/deb11_docker.tar | tar -czf ./wsl_backups/deb11_docker.tar.gz ./wsl_backups/deb11_docker.tar
+
+   rm ./wsl_backups/deb11_docker.tar
    ```
 
-NOTE: Image size is now about 1.5GB
+NOTE: Image size is now about 500 MB
 
 ## Test Docker development container using VS Code
 

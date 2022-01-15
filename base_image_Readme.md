@@ -237,8 +237,8 @@ I skipped earlier on what happens when Oh My Posh is installed. You might have r
 Export the WSL Debian image. Other images can then be build on top of this image.
 
 ```cmd
-wsl --export debian11 ./wsl_backups/deb11base.tar
+wsl --export debian11 ./wsl_backups/deb11base.tar | tar -czf ./wsl_backups/deb11base.tar.gz ./wsl_backups/deb11base.tar
 
 ```
 
-Note: Exported image size is now about 1GB.
+Note: Exported image size is now about 300MB.
