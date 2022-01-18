@@ -170,7 +170,7 @@ If you have installed VS Code extensions above, then details od cluster would be
 - In Docker extension, as K8s is running in Docker after all
 ![Kind k8s cluster info in Docker extension in Vscode](images/k8s/kind/kind_cluster_info_docker.drawio.svg)
 
-**Memory usage**
+**Memory usage**: heavy
 
 On my machine this basic cluster with 2 nodes and no actual pod running took about 7GB on my WSL2 VM. I do have another WSL2 image running with VS code, where this repository is being updated. At the same time Kind WSL2 image is also running with VS Code to test extensions and work on config.yaml etc.
 
