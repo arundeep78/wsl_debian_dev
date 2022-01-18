@@ -57,6 +57,7 @@ sudo apt update && sudo apt upgrade -y
 1. wget
 2. curl
 3. unzip
+4. lsb-release
 
 ## Move WSL Debian to another HDD/SDD
 
@@ -139,35 +140,16 @@ It opens the new session in home directory in Linux Distro given by "~" and with
 
 This setup gives the flexibility to configure mutiple Windwows Terminal sessions with different users and starting directories if one wants.
 
-## Customize WSL2 terminal using Oh My Posh
-
-This section is based on [these nicely documentated articles](https://www.ceos3c.com/wsl-2/windows-terminal-customization-wsl2-deep-dive/) by [Stefan](https://www.ceos3c.com/author/ceos3c_ic1l46/). Here I am just highlighting main points and issues I faced.
+## Install ZSH
 
 1. Install ZSH and set it as your default shell
-2. Install [Oh My Posh](https://ohmyposh.dev/) created by [Jan De Dobbeleer](https://github.com/sponsors/JanDeDobbeleer)
-3. Install [Nerd Fonts](https://www.nerdfonts.com/). This is done on Windows. I just installed Meslo LGM Nerd Font.
-   - This was the tricky part for to get right.
-   - It turns out that are some compaitbility issues between different OSes.
-   - The [github repository for Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/) provides all the various options and choices to install fonts.
-   - After some trials I relized I had to install what is called "Windows compatible" Nerd Fonts.
-   - Another challenge is to match the font name when it is installed with names given in the downloaded file names.
-4. Set Meslo LGM Nerd Font in the Windows Terminal settings > Appearance > Font face. I set it up as default from my Windows Terminal. You can ofcourse select different font for different distro.
-5. Activate Oh My Posh on ZSH. For this one need to add Oh My Posh inialization scripts with selected theme in `.zshrc` file
-
-   ```bash
-   # Oh My Posh Theme Config
-   eval "$(oh-my-posh --init --shell zsh --config ~/.poshthemes/powerlevel10k_rainbow.omp.json)"
-   ```
-
-6. Customize Oh My Posh themes to your liking.
-   There are variety of [themes available for Oh My Posh](https://ohmyposh.dev/docs/themes). You can also combine options from different themes by changing theme's json file. You can read about configuration possibilities on the [website](https://ohmyposh.dev/docs/config-overview).
-
-7. Install zsh auto-suggestions
 
    ```zsh
-   sudo apt update
-   sudo apt install zsh-autosuggestions -y 
+   sudo apt install zsh -y
+   chsh -s $(which zsh)
    ```
+
+2. Logout, close WSL session and login in again
 
 ## Git Setup
 
@@ -176,6 +158,10 @@ This section is based on [these nicely documentated articles](https://www.ceos3c
 ### Install Git in WSL
 
   Git needs to be installed on each WSL distro, if we want to use WSL distro's filesystem as the project repositories.
+
+  ```zsh
+  sudo apt install git -y
+  ```
 
 ### Install GCM (Git Credential Manager) inside WSL distro
 
@@ -204,9 +190,127 @@ This section is based on [these nicely documentated articles](https://www.ceos3c
 
  4. Restart WSL and Windows
 
+## Install Github CLI
+
+To know more, read [official documentation](https://cli.github.com/) from GitHub. [Linux specific installation instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md) are available at github.
+
+```zsh
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+sudo apt update
+
+sudo apt install gh
+```
+
+# Install and configure Oh My ZSH
+
+Rather than me saying anything about it, just read on [Oh My ZSH website](https://ohmyz.sh/). Atleast for me, with its configurable plugins and themes, it made working on Linux shell easy and intersting. I am not one of those geeks who like to remember every command and like black an white screen!
+
+1. Install pre-requisities. if you have followed all the steps above then pre-requistes are already installed.
+2. Install Oh My ZSH
+
+   ```zsh
+   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+   ```
+
+3. [Install Powerlevel10K theme](https://github.com/romkatv/powerlevel10k)
+   1. [install recommended font](https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k) - Meslo Nerd font
+   2. Install powerlevel10k theme
+
+   ```zsh
+      # Clone the repository
+      git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+      ```
+
+   3. Set `ZSH_THEME="powerlevel10k/powerlevel10k"` in `~/.zshrc`.
+   4. Logout and login into the sheel to activate it. On can also execute `p10k configure` to start the configuration wizard. Follow your preferences and configure the prompt. I went for `rainbow` style.
+   ![Oh My ZSH powerline10k rainbow prompt](images/baseimage/omz_prompt.drawio.svg)
+
+4. Configure [plugins for Oh My ZSH](https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins). Add below plugins to `~./zshrc` to enable autocompletions
+
+   ```zsh
+   plugins=(git gh)
+   ```
+
+5. Install [zsh auto-suggestions](https://github.com/zsh-users/zsh-autosuggestions). Based on the installation type procedure may change. For Oh My ZSH method is below.  
+
+   1. Copy the plugin
+
+      ```zsh
+      git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions 
+      ```
+
+   2. Add plugin in the `.zshrc` file
+
+      ```zsh
+      plugins=( 
+         # other plugins...
+         zsh-autosuggestions
+         )
+      ```
+
+   3. Based on your terminal color layout, you might have configure parameter `ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE`. For Oh My ZSH, you can edit that parameter in `$ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh`. 
+
+## Customize WSL2 terminal using Oh My Posh
+
+This is another way to beautify your terminal. Oh My Posh seems to cover only themes, while oh My ZSH covers themes and plugins. Both can work together as well. You can make your choice based on your preferences.  
+
+This section is based on [these nicely documentated articles](https://www.ceos3c.com/wsl-2/windows-terminal-customization-wsl2-deep-dive/) by [Stefan](https://www.ceos3c.com/author/ceos3c_ic1l46/). Here I am just highlighting main points and issues I faced.
+
+1. [Install ZSH](#install-zsh) and set it as your default shell, if not already done.
+
+2. Install [Oh My Posh](https://ohmyposh.dev/) created by [Jan De Dobbeleer](https://github.com/sponsors/JanDeDobbeleer)
+
+   ```zsh
+   sudo wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
+
+   sudo chmod +x /usr/local/bin/oh-my-posh
+   ```
+
+3. Download themes
+
+   ```zsh
+   mkdir ~/.poshthemes
+
+   wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
+
+   unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
+
+   chmod u+rw ~/.poshthemes/*.json
+
+   rm ~/.poshthemes/themes.zip
+   ```
+
+4. Install [Nerd Fonts](https://www.nerdfonts.com/). This is done on Windows. I just installed Meslo LGM Nerd Font.
+   - This was the tricky part to get right.
+   - It turns out that are some compaitbility issues between different OSes.
+   - The [github repository for Nerd Fonts](https://github.com/ryanoasis/nerd-fonts/) provides all the various options and choices to install fonts.
+   - After some trials I relized I had to install what is called "Windows compatible" Nerd Fonts.
+   - Another challenge is to match the font name when it is installed with names given in the downloaded file names.
+5. Set Meslo LGM Nerd Font in the Windows Terminal settings > Appearance > Font face. I set it up as default from my Windows Terminal. You can ofcourse select different font for different distro.
+6. Activate Oh My Posh on ZSH. For this one need to add Oh My Posh inialization scripts with selected theme in `.zshrc` file
+
+   ```bash
+   # Oh My Posh Theme Config
+   eval "$(oh-my-posh --init --shell zsh --config ~/.poshthemes/powerlevel10k_rainbow.omp.json)"
+   ```
+
+   If you have Oh-my-ZSH also installed then comment out the below line in `~/.zshrc`
+
+   ```zsh
+   # ZSH_THEME="powerlevel10k/powerlevel10k"
+   ```
+
+7. Customize Oh My Posh themes to your liking.
+   There are variety of [themes available for Oh My Posh](https://ohmyposh.dev/docs/themes). You can also combine options from different themes by changing theme's json file. You can read about configuration possibilities on the [website](https://ohmyposh.dev/docs/config-overview).
+
 ## Oh My Posh in action
 
-I skipped earlier on what happens when Oh My Posh is installed. You might have read the documentation earlier to know what it is about. Here I am capturing some results for the sake of completeness on my setup.
+NOTE: visualizations are valid for both Oh My ZSH and Oh my Posh, based on your configuration.
+
+You might have read the documentation earlier to know what it is about. Here I am capturing some results for the sake of completeness on my setup.
 
 1. Default shell with OMP: A nice look with execution duration
    ![simple Oh My Posh in action](images/baseimage/omp.drawio.svg)
@@ -222,7 +326,7 @@ I skipped earlier on what happens when Oh My Posh is installed. You might have r
 2. [Install Remote Development Extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack). If you are not going to use docker or other remote SSH server then you can only install Remote WSL extension.
 3. Open your project folder in WSL distro in VS Code. On your WSL shell in the appropriate folder execute
 
-   ```bash
+   ```zsh
    code .
    ```
 
@@ -236,9 +340,9 @@ I skipped earlier on what happens when Oh My Posh is installed. You might have r
 
 Export the WSL Debian image. Other images can then be build on top of this image.
 
-```cmd
-wsl --export debian11 ./wsl_backups/deb11base.tar | tar -czf ./wsl_backups/deb11base.tar.gz ./wsl_backups/deb11base.tar
+   ```cmd
+   wsl --export debian11 ./wsl_backups/deb11base.tar | tar -czf ./wsl_backups/deb11base.tar.gz ./wsl_backups/deb11base.tar
 
-```
+   ```
 
 Note: Exported image size is now about 300MB.
