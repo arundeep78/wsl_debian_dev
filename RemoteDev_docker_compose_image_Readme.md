@@ -184,6 +184,14 @@ Due to this to keep all 3rd party application integrations, what still used old 
       }
       ```
 
+## Add docker plugin for Oh My ZSH
+
+Add below plugins to `~./zshrc` to enable autocompletions, if you are using Oh My ZSH
+
+   ```zsh
+   plugins=(... docker)
+   ```
+
 ## Install VS Code extension
 
 Install [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) in VS Code. Make sure it is installed inside WSL.

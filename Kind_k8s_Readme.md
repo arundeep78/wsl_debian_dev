@@ -56,19 +56,6 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 ```
 
-## Configure autocompletion
-
-In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for zsh.
-
-```zsh
-kind completion zsh > _kind
-sudo mv _kind > /usr/local/share/zsh/site-plugins/_kind
-
-kubectl completion zsh > _kubectl
-sudo mv _kubectl > /usr/local/share/zsh/site-plugins/_kubectl
-
-```
-
 ## Install Helm
 
 [Install Helm](https://helm.sh/docs/intro/install/) to create and manage Kubernetes deployments.
@@ -78,6 +65,27 @@ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scrip
 
 chmod 700 get_helm.sh
 ./get_helm.sh
+```
+
+## Configure autocompletion
+
+In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for z sh.
+
+**kind**: execute below commands
+
+```zsh
+kind completion zsh > _kind
+sudo mv _kind > /usr/share/zsh/vendor-completions/_kind
+```
+
+**kubectl and helm**: Add plugins to `.zshrc` file for Oh My ZSH or execute similar commands as above, but for kubectl and helm
+
+```zsh
+plugins =(
+        #other plugins
+        kubectl
+        helm
+)
 ```
 
 ## Install VS Code extensions
