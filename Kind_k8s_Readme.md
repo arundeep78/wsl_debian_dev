@@ -48,7 +48,7 @@ One must change name of images and paths based on the specific setup.
 There are [different ways to install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/). Below is the procedure using binaries
 
 ```zsh
-# Doanload Kubectl
+# Download Kubectl
 curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
 # Install Kubectl
@@ -216,4 +216,4 @@ If we update kind then we might have to update node image version as well.
 
    However, I don't know how to improve this command to avoid repeating filenames.
 
-NOTE: Compresses image file is now about 700 MB.
+NOTE: Compressed image file is now about 700 MB.
