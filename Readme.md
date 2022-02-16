@@ -72,3 +72,4 @@ NOTE: AS I worked on these images, I found I could compress these exported tar f
 * ## [Remote Development WSL image based on Docker and Docker Compose V2](RemoteDev_docker_compose_image_Readme.md)
 
 * ## [Kubernetes image based on Kind](Kind_k8s_Readme.md)
+* ## [Kubernetes image based on minikube](minikube_k8s_Readme.md)
