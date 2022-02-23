@@ -104,7 +104,7 @@ minikube start
 
 **It works!!!!** :happy:
 
-![Kind create cluster with specific node image works](images/k8s/minikube/minikube_cluster_starts_success.drawio.svg)
+![minikube create cluster with specific node image works](images/k8s/minikube/minikube_cluster_starts_success.drawio.svg)
 
 If you have installed VS Code extensions above, then details of cluster would be visible in VS Code as well.
 
@@ -113,7 +113,84 @@ If you have installed VS Code extensions above, then details of cluster would be
 ![minikube cluster info in vscode kubernetes extension](images/k8s/minikube/minikube_cluster_info_vscode.drawio.svg)
 
 - In Docker extension, as K8s is running in Docker after all
+  
 ![minikube k8s cluster info in Docker extension in Vscode](images/k8s/minikube/minikube_cluster_info_docker.drawio.svg)
+
+**Problem**: "This container is having issues accessing https://k8s.gcr.io"
+
+In the oput above of `minikube start` you this message. However, when I login in to container, I can reach to the repository. However, I cannot reach to registry.docker.io or registry-1.docker.io
+
+```zsh
+docker exec -it minikube bash
+root@minikube:/# ping k8s.gcr.io
+PING googlecode.l.googleusercontent.com (74.125.133.82) 56(84) bytes of data.
+64 bytes from wo-in-f82.1e100.net (74.125.133.82): icmp_seq=1 ttl=105 time=42.3 ms
+root@minikube:/# ping docker.com
+PING docker.com (54.198.192.151) 56(84) bytes of data.
+
+root@minikube:/# ping docker.io
+PING docker.io (44.197.137.126) 56(84) bytes of data.
+
+root@minikube:/# traceroute registry-1.docker.io
+registry-1.docker.io: No address associated with hostname
+Cannot handle "host" cmdline arg `registry-1.docker.io` on position 1 (argc 1)
+
+root@minikube:/# ping registry.docker.io
+ping: registry.docker.io: Name or service not known
+
+```
+
+I logged out and logged in again to the minikube docker container. Now registry-1.docker.io works!! However, registry.docker.io still does not work
+
+After yet another logout-login step it stopped working again. Not sure where is the issue.
+
+```zsh
+root@minikube:/# ping registry.docker.com
+PING registry.docker.com (205.251.197.9) 56(84) bytes of data.
+64 bytes from ns-1289.awsdns-33.org (205.251.197.9): icmp_seq=1 ttl=241 time=24.4 ms
+64 bytes from ns-1289.awsdns-33.org (205.251.197.9): icmp_seq=2 ttl=241 time=24.5 ms
+
+root@minikube:/# ping registry-1.docker.io
+PING registry-1.docker.io (174.129.220.74) 56(84) bytes of data.
+
+root@minikube:/# ping registry.docker.io
+ping: registry.docker.io: Name or service not known
+```
+
+I stopped minikube cluster, purged the data/cache and started the cluster again. This time I did not get a warning about `k8s.gcr.io`. But still it cannot reach registry.docker.io!
+
+```zsh
+ minikube start
+😄  minikube v1.25.1 on Debian 11.2 (amd64)
+✨  Automatically selected the docker driver
+👍  Starting control plane node minikube in cluster minikube
+🚜  Pulling base image ...
+🔥  Creating docker container (CPUs=2, Memory=2200MB) ...
+🐳  Preparing Kubernetes v1.23.1 on Docker 20.10.12 ...
+    ▪ kubelet.housekeeping-interval=5m
+    ▪ Generating certificates and keys ...
+    ▪ Booting up control plane ...
+    ▪ Configuring RBAC rules ...
+🔎  Verifying Kubernetes components...
+    ▪ Using image gcr.io/k8s-minikube/storage-provisioner:v5
+🌟  Enabled addons: storage-provisioner, default-storageclass
+🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
+```
+
+```zsh
+root@minikube:/# traceroute k8s.gcr.io
+traceroute to k8s.gcr.io (142.250.13.82), 30 hops max, 60 byte packets
+ 1  host.minikube.internal (192.168.49.1)  0.032 ms  0.006 ms  0.004 ms
+
+root@minikube:/# traceroute registry.docker.io
+registry.docker.io: Temporary failure in name resolution
+Cannot handle "host" cmdline arg `registry.docker.io` on position 1 (argc 1)
+
+root@minikube:/# traceroute registry-1.docker.io
+registry-1.docker.io: No address associated with hostname
+Cannot handle "host" cmdline arg `registry-1.docker.io` on position 1 (argc 1)
+```
+
 
 **Memory usage**: heavy
 
