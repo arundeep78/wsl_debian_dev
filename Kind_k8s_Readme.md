@@ -182,14 +182,19 @@ Inside Kind WSL
 
 
 ## Check internet access from nodes
+This section is updated after trying to install airflow and having issues with downloading docker repositories. I must say that many of the details below does not mean much to me, as I do not understand all of that information. But, it might help someone else to figure it out the issue.
 
+Error message received while installing airflow was 
+```zsh
+"Failed to pull image "redis:6-buster": rpc error: code = Unknown desc = failed to pull and unpack image "docker.io/library/redis:6-buster": failed to resolve reference "docker.io/library/redis:6-buster": failed to do request: Head "https://registry-1.docker.io/v2/library/redis/manifests/6-buster": dial tcp: lookup registry-1.docker.io on 172.19.0.1:53: no such host"
+```
 <details>
 
 <summary>
 Expand for details
 </summary>
 
-This section is updated after trying to install airflow and having issues with downloading docker repositories. I must say that many of the details below does not mean much to me, as I do not understand all of that information. But, it might help someone else to figure it out the issue.
+
 
 ## WSL HOST information 
 
