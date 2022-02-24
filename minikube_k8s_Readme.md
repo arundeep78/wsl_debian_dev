@@ -50,10 +50,10 @@ There are [different ways to install kubectl](https://kubernetes.io/docs/tasks/t
 ```zsh
 # kubectl version
 
-K8S_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+K8S_VERSION=$(curl -Ls https://storage.googleapis.com/kubernetes-release/release/stable.txt)
 
 # Download Kubectl
-curl -O "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/${ARCHITECTURE}/kubectl"
+curl -LO "https://dl.k8s.io/release/${K8S_VERSION}/bin/linux/${ARCHITECTURE}/kubectl"
 
 # Install Kubectl
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
