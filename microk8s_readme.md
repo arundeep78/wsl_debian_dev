@@ -1,6 +1,6 @@
 # WSL2 image with Microk8s installation
 
-This documentation to have configure a WSL2 Debian 11 image with microk8s installed on the image. This is based on the [standard Debian 11 image configured with basic tools like Oh-my-ZSH etc](base_image_Readme.md).
+This documentation is to have configure a WSL2 Debian 11 image with microk8s installed on the image. This is based on the [standard Debian 11 image configured with basic tools like Oh-my-ZSH etc](base_image_Readme.md).
 
 I decided to create a separate image simply not to have any conflict with other flavours of K8s. Microk8s uses snap package and I read somewhere that one of the flavours(I think it was Kind) does not like snap. Maybe those issues are solved, but I already had issues with Kind installtion, so lets continue to have a isolation. Afterall all this containerization is about isolation, right?
 

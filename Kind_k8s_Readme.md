@@ -182,6 +182,7 @@ Inside Kind WSL
 
 
 ## Check internet access from nodes
+
 This section is updated after trying to install airflow and having issues with downloading docker repositories. I must say that many of the details below does not mean much to me, as I do not understand all of that information. But, it might help someone else to figure it out the issue.
 
 Error message received while installing airflow was 
@@ -278,7 +279,7 @@ nameserver 172.25.112.1 # IP address of the WSL interface in windows
 ### Check docker daemon settings
 
 ```zsh
- cat /etc/docker/daemon.json                                                                                                                                                           ─╯
+ cat /etc/docker/daemon.json
 {
         "features" : {
                 "buildkit": true
