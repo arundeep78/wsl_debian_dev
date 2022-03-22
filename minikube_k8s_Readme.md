@@ -10,7 +10,6 @@ To have a WSL image that can create Kubernetes (K8s) setups as required by certa
 
 Frankly, there is no preference, as I am not aware of all the nitty-gritties of kubernetes and various flovours of it. I selected minikube as it seems on of the default version for development.I also hope that if I face issues, minikube may have a more active and wide community support. This can then be used as a base image for other applications, that may have similar setups based on minikube.
 
-
 ## Create a new WSL environment
 
 I use docker image as a starting point as Docker seems to be the most popular containerization platform. Minikube has support for other container and VM manager as well, but then it would need another component to learn and configure. Execute below commands to create starting WSL image to develop minikube WSL2 image
@@ -71,10 +70,35 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 ```
 
+## Install cmctl
+
+This tool is required for [cert-manager](https://cert-manager.io/docs/usage/cmctl/) to issue HTTPS certificates for DNS names.
+
+```zsh
+ARCHITECTURE=$(dpkg --print-architecture)
+
+CMCTL_VERSION=$(curl -fsSL -o /dev/null -w "%{url_effective}" https://github.com/cert-man
+ager/cert-manager/releases/latest | xargs basename)
+
+curl -sSLO https://github.com/cert-manager/cert-manager/releases/download/$CMCTL_VERSION/
+cmctl-linux-$ARCHITECTURE.tar.gz
+
+tar xzf cmctl-linux-$ARCHITECTURE.tar.gz
+
+sudo mv cmctl /usr/local/bin
+
+```
+
 ## Configure autocompletion
 
 In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for z sh.
 
+**cmctl** : execute below commands
+
+```zsh
+cmctl completion zsh > _cmctl
+sudo mv _cmctl /usr/share/zsh/vendor-completions/_cmctl
+```
 
 **kubectl,minikube and helm**: Add plugins to `.zshrc` file for Oh My ZSH or execute similar commands as above, but for kubectl and helm
 
@@ -94,13 +118,11 @@ Install below extesions inside WSL VS Code server.
 - Install [Kubernetes extension](https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.vscode-kubernetes-tools) in VS Code.
 - Install [Helm Intellisense](https://marketplace.visualstudio.com/items?itemName=Tim-Koehler.helm-intellisense)
 
-
 ### Create a basic cluster
 
 ```zsh
 minikube start
 ```
-
 
 **It works!!!!** :happy:
 
@@ -116,9 +138,11 @@ If you have installed VS Code extensions above, then details of cluster would be
   
 ![minikube k8s cluster info in Docker extension in Vscode](images/k8s/minikube/minikube_cluster_info_docker.drawio.svg)
 
-**Problem**: "This container is having issues accessing https://k8s.gcr.io"
+## Problem
 
-In the oput above of `minikube start` you this message. However, when I login in to container, I can reach to the repository. However, I cannot reach to registry.docker.io or registry-1.docker.io
+This container is having issues accessing https://k8s.gcr.io"!!
+
+In the output above of `minikube start` you see this message. However, when I login in to container, I can reach to the repository. However, I cannot reach to registry.docker.io or registry-1.docker.io
 
 ```zsh
 docker exec -it minikube bash
@@ -191,6 +215,15 @@ registry-1.docker.io: No address associated with hostname
 Cannot handle "host" cmdline arg `registry-1.docker.io` on position 1 (argc 1)
 ```
 
+## FINAL Solution
+
+[After 2 weeks of trying to find solution](https://github.com/kubernetes-sigs/kind/issues/2645), I almost gave up. Then one day I came back and started again same commands. This time registry.docker.io was accessible and I could contiue to work!!!
+
+It probably was something related to docker setup in WSL as I got this solution working first in the [Kind WSL image](Kind_k8s_Readme.md).
+
+**NOTE**: I do not have Docker Desktop for Windows installed. Each WSl image has docker installed locally in it. Yet, somehow when kind image started working, minikube also was working!!
+
+NO IDEA what solved it.
 
 **Memory usage**: heavy
 
@@ -206,7 +239,6 @@ Inside minikube WSL
 
 Now we have a basic minikube distribution/flavour of K8s running on this image. We can export this image and save it for later use as starting point.
 
-
 1. Delete the temporary cluster
 
    ```zsh
@@ -214,11 +246,11 @@ Now we have a basic minikube distribution/flavour of K8s running on this image. 
    ```
 
 2. Remove minikube container and all details
-   
+
    ```zsh
    minikube delete --purge
    ```
-   
+
 3. Remove any left over docker images
 
    ```zsh

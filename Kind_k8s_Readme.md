@@ -67,6 +67,26 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 ```
 
+## Install cmctl
+
+This tool is required for [cert-manager](https://cert-manager.io/docs/usage/cmctl/) to issue HTTPS certificates for DNS names.
+
+```zsh
+ARCHITECTURE=$(dpkg --print-architecture)
+
+CMCTL_VERSION=$(curl -fsSL -o /dev/null -w "%{url_effective}" https://github.com/cert-man
+ager/cert-manager/releases/latest | xargs basename)
+
+curl -sSLO https://github.com/cert-manager/cert-manager/releases/download/$CMCTL_VERSION/
+cmctl-linux-$ARCHITECTURE.tar.gz
+
+tar xzf cmctl-linux-$ARCHITECTURE.tar.gz
+
+sudo mv cmctl /usr/local/bin
+
+
+```
+
 ## Configure autocompletion
 
 In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for z sh.
@@ -75,7 +95,14 @@ In this image we have ZSH configured as default shell using Oh My Posh. Execute 
 
 ```zsh
 kind completion zsh > _kind
-sudo mv _kind > /usr/share/zsh/vendor-completions/_kind
+sudo mv _kind /usr/share/zsh/vendor-completions/_kind
+```
+
+**cmctl** : execute below commands
+
+```zsh
+cmctl completion zsh > _cmctl
+sudo mv _cmctl /usr/share/zsh/vendor-completions/_cmctl
 ```
 
 **kubectl and helm**: Add plugins to `.zshrc` file for Oh My ZSH or execute similar commands as above, but for kubectl and helm
@@ -180,24 +207,23 @@ Inside Kind WSL
 
 ![Kind memory usage inside WSL](images/k8s/kind/kind_mem_usage_inside_wsl.drawio.svg)
 
-
 ## Check internet access from nodes
 
 This section is updated after trying to install airflow and having issues with downloading docker repositories. I must say that many of the details below does not mean much to me, as I do not understand all of that information. But, it might help someone else to figure it out the issue.
 
-Error message received while installing airflow was 
+Error message received while installing airflow was
+
 ```zsh
 "Failed to pull image "redis:6-buster": rpc error: code = Unknown desc = failed to pull and unpack image "docker.io/library/redis:6-buster": failed to resolve reference "docker.io/library/redis:6-buster": failed to do request: Head "https://registry-1.docker.io/v2/library/redis/manifests/6-buster": dial tcp: lookup registry-1.docker.io on 172.19.0.1:53: no such host"
 ```
+
 <details>
 
 <summary>
 Expand for details
 </summary>
 
-
-
-## WSL HOST information 
+## WSL HOST information
 
 ### Check ip information
 
@@ -286,6 +312,7 @@ nameserver 172.25.112.1 # IP address of the WSL interface in windows
         }
 }
 ```
+
 ### access to standard internet address
 
 ```zsh
@@ -469,7 +496,7 @@ $apt update
 $apt install iputils-ping tcpdump dnsutils traceroute -y
 ```
 
-### Check ip information
+### Check ip information-2
 
 ```zsh
 root@kind-test-worker:/# hostname -I
@@ -501,7 +528,7 @@ root@kind-test-worker:/# ip a
        valid_lft forever preferred_lft forever
 ```
 
-### Check DNS server information
+### Check DNS server information-2
 
 ```zsh
 root@kind-test-worker:/# cat /etc/nsswitch.conf
@@ -521,7 +548,7 @@ options ndots:0
 
 ```
 
-### access to standard internet address
+### access to standard internet address-2
 
 ```zsh
 root@kind-test-worker:/# ping google.com
@@ -537,7 +564,8 @@ PING m-w.com (205.251.196.60) 56(84) bytes of data.
 64 bytes from ns-1084.awsdns-07.org (205.251.196.60): icmp_seq=1 ttl=240 time=21.9 ms
 
 ```
-### access to image repositories
+
+### access to image repositories-2
 
 It seems that registry.docker.io has problem with name resolution
 
@@ -559,7 +587,8 @@ root@kind-test-worker:/# ping k8s.gcr.io
 PING googlecode.l.googleusercontent.com (142.251.18.82) 56(84) bytes of data.
 64 bytes from er-in-f82.1e100.net (142.251.18.82): icmp_seq=1 ttl=107 time=41.6 ms
 ```
-### DNS information on repositories
+
+### DNS information on repositories-2
 
 registry.docker.io gets a DNS information, but is diffrent than the one on the WSL host DNS. Same is the case for k8s.gcr.io
 
@@ -661,6 +690,7 @@ googlecode.l.googleusercontent.com. 0 IN A      142.251.18.82
 ### traceroute for these repositories
 
 k8s.gcr.io follows the standard path to the ISP and beyond
+
 ```zsh
 
 root@kind-test-worker:/# traceroute k8s.gcr.io
@@ -704,13 +734,14 @@ traceroute to 34.196.250.152 (34.196.250.152), 30 hops max, 60 byte packets
 
 </details>
 
+## FINAL Solution
 
+[After 2 weeks of trying to find solution](https://github.com/kubernetes-sigs/kind/issues/2645), I almost gave up. Then one day I came back and started again same commands. This time registry.docker.io was accessible and I could contiue to work!!!
 
-
-
-
+NO IDEA what solved it.
 
 ## Export the Kind image as WSL image
+
 <details>
 
 <summary>
@@ -753,5 +784,3 @@ If we update kind then we might have to update node image version as well.
 
 NOTE: Compressed image file is now about 700 MB.
 </details>
-
-

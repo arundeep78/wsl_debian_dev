@@ -4,7 +4,6 @@ This documentation is to have configure a WSL2 Debian 11 image with microk8s ins
 
 I decided to create a separate image simply not to have any conflict with other flavours of K8s. Microk8s uses snap package and I read somewhere that one of the flavours(I think it was Kind) does not like snap. Maybe those issues are solved, but I already had issues with Kind installtion, so lets continue to have a isolation. Afterall all this containerization is about isolation, right?
 
-
 ## Why MicroK8s?
 
 The documentation says that it has a very low memory footprint. This is cool as it should help keep some resources free on my laptop. 
@@ -35,7 +34,7 @@ Debian uses apt as package manager by default. For some reason MicroK8s is distr
     ```  
 
 2. Logout and login to the session again
-3. Install snap core 
+3. Install snap core
    
     ```zsh
     $sudo snap install core
