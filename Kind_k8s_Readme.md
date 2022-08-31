@@ -56,6 +56,33 @@ sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 ```
 
+## Install krew
+
+[krew](https://krew.sigs.k8s.io/docs/user-guide/setup/install/) is a plugin manager for `kubectl`. It helps to add usefull additional functionality to kubectl.
+
+Follow steps on the ofifical website. 
+
+1. Make sure `git` is installed.
+2. Execute below commands in for `zsh` or `bash`
+
+   ```bash
+      (
+         set -x; cd "$(mktemp -d)" &&
+         OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+         ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')" &&
+         KREW="krew-${OS}_${ARCH}" &&
+         curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/${KREW}.tar.gz" &&
+         tar zxvf "${KREW}.tar.gz" &&
+         ./"${KREW}" install krew
+      )
+   ```
+
+3. Add the $HOME/.krew/bin directory to your PATH environment variable. To do this, update your .bashrc or .zshrc file and append the following line:
+
+   ```bash
+      export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+   ```
+
 ## Install Helm
 
 [Install Helm](https://helm.sh/docs/intro/install/) to create and manage Kubernetes deployments.
