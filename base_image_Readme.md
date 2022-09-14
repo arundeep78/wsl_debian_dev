@@ -204,6 +204,19 @@ sudo apt update
 sudo apt install gh
 ```
 
+## Install Github Large file support
+
+Provide support for [large file support for github repos](https://github.com/git-lfs/git-lfs/wiki/Installation).
+
+```bash
+   curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+
+   sudo apt-get install git-lfs
+   git lfs install
+````
+
+Now one can configure large files to be handles by github LFS. You can manually add files int the repo with `git lfs track *.psd`  or you can edit `.gitattributes` file
+
 # Install and configure Oh My ZSH
 
 Rather than me saying anything about it, just read on [Oh My ZSH website](https://ohmyz.sh/). Atleast for me, with its configurable plugins and themes, it made working on Linux shell easy and intersting. I am not one of those geeks who like to remember every command and like black an white screen!
