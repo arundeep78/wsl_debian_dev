@@ -46,7 +46,7 @@ In latest version of Windows 10 and 11 there is 1 command install availabe from 
 In adminstrator mode in cmd or powershell write
 
  ```bash
- wsl --install Debian
+ wsl --install -d Debian
  ```
 
  Make sure you have WSL version 2 set as the default version.
