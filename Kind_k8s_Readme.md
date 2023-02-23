@@ -114,6 +114,14 @@ sudo mv cmctl /usr/local/bin
 
 ```
 
+## Install k9s
+
+[k9s is an amzing friendly tool](https://github.com/derailed/k9s) to work with k8s cluster. It provides an interactive interface to work with cluster and make it a breeze in comparison to kubectl.
+
+```zsh
+curl -sS https://webinstall.dev/k9s | bash
+```
+
 ## Configure autocompletion
 
 In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for z sh.
