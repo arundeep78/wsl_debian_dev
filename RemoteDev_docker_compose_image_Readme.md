@@ -274,3 +274,29 @@ Now let's test if this image is working for development container using VS Code.
 11. Run the `hello_world.py` using VScode command palette `Run Python File in Terminal`
 12. You will see the output in Terminal session. It is working!!!
     ![Output should be visible in the terminal](images/devcontainer/output_python.drawio.svg)
+
+## Network issues with Docker containers
+
+It happens time to time that inside running containers, applications cannot connect to network and will fail. e.g.
+
+```bash
+sudo apt-get update
+
+Err:1 http://archive.ubuntu.com/ubuntu focal InRelease
+  Temporary failure resolving 'archive.ubuntu.com'
+Err:2 http://security.ubuntu.com/ubuntu focal-security InRelease
+  Temporary failure resolving 'security.ubuntu.com'
+Err:3 http://archive.ubuntu.com/ubuntu focal-updates InRelease
+  Temporary failure resolving 'archive.ubuntu.com'
+
+```
+
+One solution is try to reset windows network and restart windows
+
+```cmd
+wsl --shutdown
+netsh winsock reset
+netsh int ip reset all
+netsh winhttp reset proxy
+ipconfig /flushdns
+```

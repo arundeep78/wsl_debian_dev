@@ -114,6 +114,14 @@ sudo mv cmctl /usr/local/bin
 
 ```
 
+## Install k9s
+
+[k9s is an amzing friendly tool](https://github.com/derailed/k9s) to work with k8s cluster. It provides an interactive interface to work with cluster and make it a breeze in comparison to kubectl.
+
+```zsh
+curl -sS https://webinstall.dev/k9s | bash
+```
+
 ## Configure autocompletion
 
 In this image we have ZSH configured as default shell using Oh My Posh. Execute below commands to add autocompletion for Kind and kubectl for z sh.
@@ -766,6 +774,8 @@ traceroute to 34.196.250.152 (34.196.250.152), 30 hops max, 60 byte packets
 [After 2 weeks of trying to find solution](https://github.com/kubernetes-sigs/kind/issues/2645), I almost gave up. Then one day I came back and started again same commands. This time registry.docker.io was accessible and I could contiue to work!!!
 
 NO IDEA what solved it.
+
+[One option to try is to reset windows network config and restart](RemoteDev_docker_compose_image_Readme.md#network-issues-with-docker-containers). As kind is based on Docker, so this is relevant for Docker and not just Kind.
 
 ## Export the Kind image as WSL image
 
