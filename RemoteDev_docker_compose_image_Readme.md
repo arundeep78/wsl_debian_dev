@@ -192,6 +192,26 @@ Add below plugins to `~./zshrc` to enable autocompletions, if you are using Oh M
    plugins=(... docker)
    ```
 
+## Install Docker HUB CLI TOOL
+
+This is similar to Github CLI tool. More information available on [GH repo](https://github.com/docker/hub-tool?tab=readme-ov-file#readme) 
+
+Execute below command to install it.
+
+```zsh
+ (
+      OS="$(uname | tr '[:upper:]' '[:lower:]')" &&
+      ARCH="$(dpkg --print-architecture)" &&
+      HUBTOOL_VERSION="$(curl -fsSL -o /dev/null -w '%{url_effective}' https://github.com/docker/hub-tool/releases/latest | xargs basename)" &&
+      HUBTOOL="hub-tool-${OS}-${ARCH}" &&
+      curl -fsSLO "https://github.com/docker/hub-tool/releases/download/${HUBTOOL_VERSION}/${HUBTOOL}.tar.gz" &&
+      tar zxvf "${HUBTOOL}.tar.gz" &&
+      sudo mv ./hub-tool/hub-tool /usr/local/bin &&
+      rm "${HUBTOOL}.tar.gz" &&
+      rm -rf hub-tool
+   )
+```
+
 ## Install VS Code extension
 
 Install [Docker extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) in VS Code. Make sure it is installed inside WSL.
