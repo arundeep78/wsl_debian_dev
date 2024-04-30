@@ -1,0 +1,72 @@
+FROM debian:bookworm-20240423
+
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    gh \
+    wget \
+    unzip \
+    lsb-release \
+    zsh \
+    ca-certificates \
+    gnupg \
+    && rm -rf /var/lib/apt/lists/*
+
+#Install Docker CE
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+RUN apt-get update && apt-get install -y \
+    docker-ce \
+    docker-ce-cli \
+    docker-buildx-plugin \
+    containerd.io \
+    docker-compose-plugin \
+    && rm -rf /var/lib/apt/lists/*
+
+
+COPY wsl.conf /etc/wsl.conf
+
+
+# create new user, add to group docker with zsh as default shell and set home directory to /home/arundeep
+
+RUN useradd -m -s /usr/bin/zsh arundeep
+RUN usermod -aG docker arundeep
+# RUN chsh -s /bin/zsh arundeep
+
+# add user to sudoers
+RUN echo 'arundeep ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER arundeep
+WORKDIR /home/arundeep
+
+# Install Oh My Zsh
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+
+# Install Powerlevel10k theme
+RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+
+COPY .p10k.zsh .p10k.zsh
+
+# RUN cp .p10k.zsh ~/
+# RUN rm .p10k.zsh
+
+# Install zsh-autosuggestions
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Install zsh-completions
+RUN git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=~/.oh-my-zsh/custom}/plugins/zsh-completions
+
+# Set powerlevel10k as the default theme
+RUN sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="powerlevel10k\/powerlevel10k"/g' ~/.zshrc
+
+# Set zsh plugins
+RUN sed -i 's/plugins=(git)/plugins=(git gh zsh-autosuggestions zsh-completions docker)/g' ~/.zshrc
+
+# # Install WSL2 configuration tool
+# RUN wget -q https://aka.ms/wsl2-debian-gnulinux -O /tmp/wsl2.deb
+# RUN dpkg -i /tmp/wsl2.deb
+# RUN rm /tmp/wsl2.deb
+
