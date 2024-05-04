@@ -14,6 +14,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     ca-certificates \
     gnupg \
     sudo \
+    kmod \
+    qemu-system-x86 \
+    libvirt-daemon-system \
+    cloud-init \
     && rm -rf /var/lib/apt/lists/*
 
 #Install Docker CE
@@ -34,7 +38,7 @@ COPY wsl.conf /etc/wsl.conf
 # create new user, add to group docker with zsh as default shell and set home directory to /home/arundeep
 
 RUN useradd -m -s /usr/bin/zsh arundeep
-RUN usermod -aG docker,sudo arundeep
+RUN usermod -aG docker,kvm,sudo arundeep
 # RUN chsh -s /bin/zsh arundeep
 
 # add user to sudoers
